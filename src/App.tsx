@@ -12,6 +12,7 @@ class App extends React.Component {
         <Route exact path='/' component={Home}/>
         <Route path='/about/:name?' component={About}/>
         <Route path="/posts" component={Posts}/>
+        <hr/>
         <ShowPageInfo/>
       </div>
     );
