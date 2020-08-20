@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { Button, Paper, Card, CardContent, Typography, CardActions, CardHeader, Avatar, IconButton, CardMedia, Collapse, Menu, MenuItem } from '@material-ui/core';
+import { Button, Paper, Card, CardContent, Typography, CardActions, CardHeader, Avatar, IconButton, CardMedia, Collapse, Menu, MenuItem, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
 import { MoreVert, Favorite, Share, ExpandMore } from '@material-ui/icons';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { red } from '@material-ui/core/colors';
@@ -88,6 +88,7 @@ function RecipeReviewCard() {
     const classes = recipeStyle();
     const [expanded, setExpanded] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState<null|HTMLElement>(null);
+    const [open, setOpen] = React.useState(false);
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
@@ -99,6 +100,14 @@ function RecipeReviewCard() {
 
     const handleClose = () => {
         setAnchorEl(null);
+    }
+
+    const handleDialogOpen = () => {
+        setOpen(true);
+    }
+
+    const handleDialogClose = () => {
+        setOpen(false);
     }
 
     return (
@@ -114,6 +123,21 @@ function RecipeReviewCard() {
                 <MenuItem onClick={handleClose}>My account</MenuItem>
                 <MenuItem onClick={handleClose}>Logout</MenuItem>
             </Menu>
+            <Dialog
+            open={open}
+            onClose={handleDialogClose}>
+                <DialogTitle>Use Google's location service?</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Let Google help apps determine location. This means sending anonymous location data to
+                        Google, even when no apps are running.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDialogClose} color='primary'>Disagree</Button>
+                    <Button onClick={handleDialogClose} color='primary'>Agree</Button>
+                </DialogActions>
+            </Dialog>
             <CardHeader
                 avatar={
                     <Avatar className={classes.avatar} aria-label='recipe'>R</Avatar>
@@ -138,7 +162,7 @@ function RecipeReviewCard() {
                 </Typography>
             </CardContent>
             <CardActions disableSpacing>
-                <IconButton aria-label='add to favorites'>
+                <IconButton aria-label='add to favorites' onClick={handleDialogOpen}>
                     <Favorite />
                 </IconButton>
                 <IconButton aria-label='share'>
