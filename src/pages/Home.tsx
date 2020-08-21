@@ -1,15 +1,28 @@
 import React from 'react';
 import clsx from 'clsx';
+import { IpcRenderer } from 'electron';
 import { Button, Paper, Card, CardContent, Typography, CardActions, CardHeader, Avatar, IconButton, CardMedia, Collapse, Menu, MenuItem, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
 import { MoreVert, Favorite, Share, ExpandMore } from '@material-ui/icons';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { red } from '@material-ui/core/colors';
 
+declare global {
+    interface Window {
+        ipcRenderer: IpcRenderer;
+    }
+}
+
 export default class Home extends React.Component {
+    async hello() {
+        const res = await window.ipcRenderer.invoke('get-device-list');
+        console.log(res);
+    }
+
     render() {
         return (
             <div>
                 <RecipeReviewCard/>
+                <Button onClick={()=>this.hello()}>Hello</Button>
             </div>
         );
     }
