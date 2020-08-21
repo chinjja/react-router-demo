@@ -2,7 +2,7 @@
   "name": "react-router-demo",
   "version": "0.1.0",
   "private": true,
-  "main": "public/electron.js",
+  "main": "build/electron.js",
   "homepage": "./",
   "dependencies": {
     "@material-ui/core": "^4.11.0",
@@ -35,8 +35,8 @@
     "electron-builder": "^22.8.0"
   },
   "scripts": {
-    "electron": "concurrently \"npm run start\" \"electron .\"",
-    "electron-build": "npm run build && electron-builder",
+    "electron": "concurrently \"npm run start\" \"tsc -p electron && electron .\"",
+    "electron-build": "npm run build && tsc -p electron && electron-builder",
     "start": "cross-env BROWSER=none react-scripts start",
     "build": "cross-env GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",

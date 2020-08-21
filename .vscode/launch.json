@@ -6,8 +6,9 @@
     "configurations": [
         {
             "name": "Electron Main",
-            "program": "${workspaceFolder}/public/electron.js",
+            "program": "${workspaceFolder}/build/electron.js",
             "request": "launch",
+            "preLaunchTask": "tsc: build - electron/tsconfig-dev.json",
             "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
             "skipFiles": [
                 "<node_internals>/**"
