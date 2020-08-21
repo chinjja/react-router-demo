@@ -4,6 +4,7 @@ import { Home, About, Posts, NivoChart, ReChart } from './pages';
 import Menu from './components/Menu';
 import ShowPageInfo from './components/ShowPageInfo';
 import { Divider } from '@material-ui/core';
+import HighlightAndZoomLineChart from './pages/HighlightAndZoomLineChart';
 
 class App extends React.Component {
   render() {
@@ -17,6 +18,8 @@ class App extends React.Component {
         <NivoChart />
         <Divider />
         <ReChart />
+        <Divider />
+        <HighlightAndZoomLineChart />
         <Divider />
         <ShowPageInfo/>
       </div>
