@@ -10,6 +10,8 @@ class App extends React.Component {
   render() {
     return (
       <div>
+        <ShowPageInfo/>
+        <Divider />
         <Menu/>
         <Route exact path='/' component={Home}/>
         <Route path='/about/:name?' component={About}/>
@@ -20,8 +22,6 @@ class App extends React.Component {
         <ReChart />
         <Divider />
         <HighlightAndZoomLineChart />
-        <Divider />
-        <ShowPageInfo/>
       </div>
     );
   }
