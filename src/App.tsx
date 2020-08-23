@@ -5,6 +5,7 @@ import Menu from './components/Menu';
 import ShowPageInfo from './components/ShowPageInfo';
 import { Divider } from '@material-ui/core';
 import HighlightAndZoomLineChart from './pages/HighlightAndZoomLineChart';
+import Room from './pages/Room';
 
 class App extends React.Component {
   render() {
@@ -16,6 +17,8 @@ class App extends React.Component {
         <Route exact path='/' component={Home}/>
         <Route path='/about/:name?' component={About}/>
         <Route path="/posts" component={Posts}/>
+        <Divider />
+        <Room />
         <Divider />
         <NivoChart />
         <Divider />
