@@ -17,8 +17,7 @@ class App extends React.Component {
         <Route exact path='/' component={Home}/>
         <Route path='/about/:name?' component={About}/>
         <Route path="/posts" component={Posts}/>
-        <Divider />
-        <Room />
+        <Route path="/rooms" component={Room}/>
         <Divider />
         <NivoChart />
         <Divider />
