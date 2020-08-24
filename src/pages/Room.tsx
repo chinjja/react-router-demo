@@ -93,7 +93,7 @@ export default class Room extends React.Component<{}, RoomState> {
                     Refresh
                 </Button>
                 {items}
-                <Dialog open={open || false}>
+                <Dialog open={open || false} onClose={()=>this.setOpen(false)}>
                     <DialogTitle>Deleting the room</DialogTitle>
                     <DialogContent>Do you want to delete a {selectedRoom?.title} [{selectedRoom?.id}]</DialogContent>
                     <DialogActions>
