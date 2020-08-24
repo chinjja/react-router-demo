@@ -1,8 +1,9 @@
 import React from 'react';
 import axios from 'axios';
-import { Typography, Button, Paper, Dialog, DialogActions, DialogTitle, DialogContent } from '@material-ui/core';
+import { Typography, Button, Paper } from '@material-ui/core';
 import {} from '@material-ui/icons';
 import ws from 'websocket';
+import { DeleteDialog, CreateDialog } from '../dialogs';
 
 const apiUrl = 'http://localhost:8888';
 const wsUrl = 'ws://localhost:8888/rooms';
@@ -12,14 +13,15 @@ const api = axios.create({
     timeout: 1000
 });
 
-interface RoomData {
-    id?: string;
-    title?: string;
+export interface RoomData {
+    id: string;
+    title: string;
 }
 interface RoomState {
     status?: number;
     rooms?: RoomData[];
-    open?: boolean;
+    openDelete?: boolean;
+    openCreate?: boolean;
     selectedRoom?: RoomData;
 }
 
@@ -42,31 +44,51 @@ export default class Room extends React.Component<{}, RoomState> {
         return api.get<RoomData[]>('/rooms');
     }
 
-    updateData() {
-        this.fetchData().then((res) => {
-            console.log(res.data);
-            this.setState({
-                status: res.status,
-                rooms: res.data,
-            });
-        });
-    }
-
-    deleteRoom(id: string) {
-        console.log('id? ' + id);
-        api.delete('/rooms/'+id).then(() => {
-            this.updateData();
-        })
-    }
-
-    setOpen(visible = false) {
+    async updateData() {
+        const res = await this.fetchData();
         this.setState({
-            open: visible
+            status: res.status,
+            rooms: res.data,
         });
+    }
+
+    async deleteData(id: string) {
+        return api.delete('/rooms/'+id);
+    }
+
+    async createData(title: string) {
+        return api.post('/rooms', {
+            title: title
+        });
+    }
+
+    setOpenDelete(visible = false) {
+        this.setState({
+            openDelete: visible
+        });
+    }
+
+    setOpenCreate(visible = false) {
+        this.setState({
+            openCreate: visible
+        });
+    }
+
+    async handleDelete(room: RoomData) {
+        await this.deleteData(room.id);
+        await this.updateData();
+        this.setOpenDelete(false);
+    }
+
+    async handleCreate(title: string) {
+        console.log('handle create ' + title);
+        await this.createData(title);
+        await this.updateData();
+        this.setOpenCreate(false);
     }
 
     render() {
-        const { status, rooms, open, selectedRoom } = this.state || {};
+        const { status, rooms, openDelete, openCreate, selectedRoom } = this.state || {};
         const items = rooms?.map((room)=>(
             <Paper key={room.id} variant='outlined' onClick={()=>{
                 this.setState({
@@ -77,7 +99,7 @@ export default class Room extends React.Component<{}, RoomState> {
                 <Typography>Title: {room.title}</Typography>
                 <Button
                     variant='outlined'
-                    onClick={()=>this.setOpen(true)}
+                    onClick={()=>this.setOpenDelete(true)}
                 >
                     Delete
                 </Button>
@@ -92,20 +114,24 @@ export default class Room extends React.Component<{}, RoomState> {
                 >
                     Refresh
                 </Button>
+                <Button
+                    variant='outlined'
+                    onClick={()=>this.setOpenCreate(true)}
+                >
+                    Create
+                </Button>
                 {items}
-                <Dialog open={open || false} onClose={()=>this.setOpen(false)}>
-                    <DialogTitle>Deleting the room</DialogTitle>
-                    <DialogContent>Do you want to delete a {selectedRoom?.title} [{selectedRoom?.id}]</DialogContent>
-                    <DialogActions>
-                        <Button onClick={()=>{
-                            this.deleteRoom(selectedRoom?.id!);
-                            this.setOpen(false);
-                        }}>
-                            YES
-                        </Button>
-                        <Button onClick={()=>this.setOpen(false)}>NO</Button>
-                    </DialogActions>
-                </Dialog>
+                <DeleteDialog
+                    open={openDelete || false}
+                    onCommit={(room)=>this.handleDelete(room)}
+                    onClose={()=>this.setOpenDelete(false)}
+                    selected={selectedRoom}
+                />
+                <CreateDialog
+                    open={openCreate || false}
+                    onCommit={(title)=>this.handleCreate(title)}
+                    onClose={()=>this.setOpenCreate(false)}
+                />
             </Paper>
         );
     }
