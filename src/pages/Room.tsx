@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography, Button, Paper } from '@material-ui/core';
 import {} from '@material-ui/icons';
 import ws from 'websocket';
-import { DeleteDialog, CreateDialog } from '../dialogs';
+import { DeleteDialog, InputDialog } from '../dialogs';
 import api, { RoomData } from '../api/rooms';
  
 const wsUrl = 'ws://localhost:8888/rooms';
@@ -12,6 +12,7 @@ interface RoomState {
     rooms?: RoomData[];
     openDelete?: boolean;
     openCreate?: boolean;
+    openEdit?: boolean;
     selectedRoom?: RoomData;
 }
 
@@ -50,6 +51,12 @@ export default class Room extends React.Component<{}, RoomState> {
         });
     }
 
+    setOpenEdit(visible = false) {
+        this.setState({
+            openEdit: visible
+        });
+    }
+
     async handleDelete(room: RoomData) {
         await api.remove(room.id);
         await this.updateData();
@@ -57,14 +64,22 @@ export default class Room extends React.Component<{}, RoomState> {
     }
 
     async handleCreate(title: string) {
-        console.log('handle create ' + title);
         await api.create(title);
         await this.updateData();
         this.setOpenCreate(false);
     }
 
+    async handleEdit(title: string) {
+        const selected = this.state.selectedRoom;
+        if(!selected) return;
+
+        await api.update(selected.id, title);
+        await this.updateData();
+        this.setOpenEdit(false);
+    }
+
     render() {
-        const { status, rooms, openDelete, openCreate, selectedRoom } = this.state || {};
+        const { status, rooms, openDelete, openCreate, openEdit, selectedRoom } = this.state || {};
         const items = rooms?.map((room)=>(
             <Paper
                 key={room.id}
@@ -86,6 +101,12 @@ export default class Room extends React.Component<{}, RoomState> {
                     onClick={()=>this.setOpenDelete(true)}
                 >
                     Delete
+                </Button>
+                <Button
+                    variant='outlined'
+                    onClick={()=>this.setOpenEdit(true)}
+                >
+                    Edit
                 </Button>
             </Paper>
         ));
@@ -116,10 +137,23 @@ export default class Room extends React.Component<{}, RoomState> {
                     onClose={()=>this.setOpenDelete(false)}
                     selected={selectedRoom}
                 />
-                <CreateDialog
+                <InputDialog
+                    title='Creating the room'
+                    content='Enter title of room'
+                    commitText='Create'
+                    hint='Title'
                     open={openCreate || false}
                     onCommit={(title)=>this.handleCreate(title)}
-                    onClose={()=>this.setOpenCreate(false)}
+                    onCancel={()=>this.setOpenCreate(false)}
+                />
+                <InputDialog
+                    title='Editing the room'
+                    content='Edit title of room'
+                    commitText='Rename'
+                    hint='Title'
+                    open={openEdit || false}
+                    onCommit={(title)=>this.handleEdit(title)}
+                    onCancel={()=>this.setOpenEdit(false)}
                 />
             </Paper>
         );

@@ -27,6 +27,12 @@ export class RoomApi {
             title: title
         });
     }
+
+    async update(id: string, title: string) {
+        return this.api.put('/rooms/'+id, {
+            title: title
+        });
+    }
 }
 
 export default new RoomApi();
