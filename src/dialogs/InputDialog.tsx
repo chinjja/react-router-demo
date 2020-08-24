@@ -8,6 +8,7 @@ interface InputDialogProps extends DialogProps {
     initValue?: string;
     commitText?: string;
     cancelText?: string;
+    type?: string;
     onCommit(value: string): void;
     onCancel(): void;
 }
@@ -16,7 +17,7 @@ export default class InputDialog extends React.Component<InputDialogProps> {
     title = React.createRef<InputProps>();
     
     render() {
-        const { title, content, hint, commitText, cancelText, initValue} = this.props;
+        const { title, content, hint, commitText, cancelText, initValue, type} = this.props;
         return (
             <Dialog {...this.props}>
                 <DialogTitle>{title}</DialogTitle>
@@ -28,6 +29,7 @@ export default class InputDialog extends React.Component<InputDialogProps> {
                         label={hint}
                         inputRef={this.title}
                         value={initValue}
+                        type={type}
                         fullWidth
                         autoFocus
                     />

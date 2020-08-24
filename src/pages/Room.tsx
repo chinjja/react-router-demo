@@ -151,6 +151,7 @@ export default class Room extends React.Component<{}, RoomState> {
                     content='Edit title of room'
                     commitText='Rename'
                     hint='Title'
+                    initValue={selectedRoom?.title}
                     open={openEdit || false}
                     onCommit={(title)=>this.handleEdit(title)}
                     onCancel={()=>this.setOpenEdit(false)}
