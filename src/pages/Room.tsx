@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Typography, Button, Paper } from '@material-ui/core';
+import { Typography, Button, Paper, Dialog, DialogActions, DialogTitle, DialogContent } from '@material-ui/core';
 import {} from '@material-ui/icons';
 import ws from 'websocket';
 
@@ -19,6 +19,8 @@ interface RoomData {
 interface RoomState {
     status?: number;
     rooms?: RoomData[];
+    open?: boolean;
+    selectedRoom?: RoomData;
 }
 
 export default class Room extends React.Component<{}, RoomState> {
@@ -57,15 +59,25 @@ export default class Room extends React.Component<{}, RoomState> {
         })
     }
 
+    setOpen(visible = false) {
+        this.setState({
+            open: visible
+        });
+    }
+
     render() {
-        const { status, rooms } = this.state || {};
+        const { status, rooms, open, selectedRoom } = this.state || {};
         const items = rooms?.map((room)=>(
-            <Paper key={room.id} variant='outlined'>
+            <Paper key={room.id} variant='outlined' onClick={()=>{
+                this.setState({
+                    selectedRoom: room
+                });
+            }}>
                 <Typography>ID: {room.id}</Typography>
                 <Typography>Title: {room.title}</Typography>
                 <Button
                     variant='outlined'
-                    onClick={()=>this.deleteRoom(room.id!)}
+                    onClick={()=>this.setOpen(true)}
                 >
                     Delete
                 </Button>
@@ -81,6 +93,19 @@ export default class Room extends React.Component<{}, RoomState> {
                     Refresh
                 </Button>
                 {items}
+                <Dialog open={open || false}>
+                    <DialogTitle>Deleting the room</DialogTitle>
+                    <DialogContent>Do you want to delete a {selectedRoom?.title} [{selectedRoom?.id}]</DialogContent>
+                    <DialogActions>
+                        <Button onClick={()=>{
+                            this.deleteRoom(selectedRoom?.id!);
+                            this.setOpen(false);
+                        }}>
+                            YES
+                        </Button>
+                        <Button onClick={()=>this.setOpen(false)}>NO</Button>
+                    </DialogActions>
+                </Dialog>
             </Paper>
         );
     }
