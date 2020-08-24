@@ -1,5 +1,5 @@
 import React from 'react';
-import { RoomData } from '../pages/Room';
+import { RoomData } from '../api/rooms';
 import { Dialog, DialogProps, DialogTitle, DialogActions, DialogContent, Button } from '@material-ui/core';
 
 interface DeleteDialogProps extends DialogProps {
