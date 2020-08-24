@@ -90,11 +90,19 @@ export default class Room extends React.Component<{}, RoomState> {
     render() {
         const { status, rooms, openDelete, openCreate, selectedRoom } = this.state || {};
         const items = rooms?.map((room)=>(
-            <Paper key={room.id} variant='outlined' onClick={()=>{
-                this.setState({
-                    selectedRoom: room
-                });
-            }}>
+            <Paper
+                key={room.id}
+                variant='outlined'
+                onClick={()=>{
+                    this.setState({
+                        selectedRoom: room
+                    });
+                }}
+                style={{
+                    margin: 8,
+                    padding: 8
+                }}
+            >
                 <Typography>ID: {room.id}</Typography>
                 <Typography>Title: {room.title}</Typography>
                 <Button
@@ -106,7 +114,12 @@ export default class Room extends React.Component<{}, RoomState> {
             </Paper>
         ));
         return (
-            <Paper variant='outlined'>
+            <Paper
+                style={{
+                    margin: 8,
+                    padding: 8
+                }}
+            >
                 <Typography>Status: {status}</Typography>
                 <Button
                     variant='outlined'
