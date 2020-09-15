@@ -38,7 +38,7 @@
     "electron-rebuild": "^2.0.0"
   },
   "scripts": {
-    "electron": "concurrently \"npm run start\" \"tsc -p electron && electron .\"",
+    "electron": "concurrently --kill-others-on-fail \"npm run start\" \"tsc -p electron && electron .\"",
     "electron-build": "npm run build && tsc -p electron && electron-builder",
     "electron-rebuild": "electron-rebuild",
     "start": "cross-env BROWSER=none react-scripts start",
